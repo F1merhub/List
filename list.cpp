@@ -192,10 +192,9 @@ Node* List_Find(List *lst, list_element value) {  // первое вхожден
 int main() {
     List *lst = List_Constructor();
 
-    List_Add_First(lst, 1);
-    List_Add_Last(lst, 2);
-    List_Add(lst, 3, 2);
-    List_Add_First(lst, 0);
+    List_Add(lst, 5, 4);
+    List_Add(lst, 6, 5);
+    List_Add(lst, 7, 6);
     ListDumpDot(lst);
     List_Print(lst);
     List_Destructor(&lst);
