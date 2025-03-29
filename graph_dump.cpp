@@ -1,7 +1,6 @@
 #include "list.h"
 
 int ListDumpDot(List *lst) {
-    const size_t BUFFER_SIZE = 4048;
     char buffer[BUFFER_SIZE];
     int buffer_len = 0;
 

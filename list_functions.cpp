@@ -1,5 +1,4 @@
 #include "list.h"
-#include "color.h"
 
 List *List_Constructor() {
     List *lst = (List *)calloc(1, sizeof(List));
@@ -10,7 +9,6 @@ List *List_Constructor() {
 
     return lst;
 }
-
 
 void List_Destructor(List **lst) {
     if (lst && *lst) {
@@ -187,16 +185,4 @@ Node* List_Find(List *lst, list_element value) {  // первое вхожден
     }
 
     return NULL;
-}
-
-int main() {
-    List *lst = List_Constructor();
-
-    List_Add(lst, 5, 4);
-    List_Add(lst, 6, 5);
-    List_Add(lst, 7, 6);
-    ListDumpDot(lst);
-    List_Print(lst);
-    List_Destructor(&lst);
-    return 0;
 }
