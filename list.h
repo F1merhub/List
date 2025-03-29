@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "color.h"
 
 typedef int list_element;
 const size_t BUFFER_SIZE = 4048;
@@ -32,7 +31,7 @@ enum error_code
     INVALID_ADRESS = 3
 };
 
-error_code List_Remove(List *lst, Node *remove_node);
+error_code List_Remove_Pointer(List *lst, Node *remove_node);
 Node* List_Find(List *lst, list_element value);
 Node* List_Get_First(List* lst);
 Node* List_Get_Last(List* lst);
@@ -44,6 +43,8 @@ error_code List_Add(List *lst, list_element value, int adress);
 void List_Destructor(List **lst);
 List *List_Constructor();
 error_code List_Print(List *lst);
-int ListDumpDot(List *lst);
+int List_Dump_Dot(List *lst);
+error_code List_Remove_Adress(List *lst, int adress);
+error_code List_Remove_Index(List *lst, int adress);
 
 #endif

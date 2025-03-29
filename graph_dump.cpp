@@ -1,6 +1,6 @@
 #include "list.h"
 
-int ListDumpDot(List *lst) {
+int List_Dump_Dot(List *lst) {
     char buffer[BUFFER_SIZE];
     int buffer_len = 0;
 

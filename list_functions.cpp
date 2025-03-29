@@ -114,7 +114,7 @@ error_code List_Add_Last(List *lst, list_element value) {
     return OK;
 }
 
-error_code List_Remove(List *lst, Node *remove_node) {
+error_code List_Remove_Pointer(List *lst, Node *remove_node) {
     if (! lst || (!remove_node))
         return NULL_LST;
 
@@ -185,4 +185,23 @@ Node* List_Find(List *lst, list_element value) {  // первое вхожден
     }
 
     return NULL;
+}
+
+error_code List_Remove_Index(List *lst, int adress) {
+    if (! lst)
+        return NULL_LST;
+
+    if (adress > lst->size)
+        return INVALID_ADRESS;
+
+    Node *current = lst->head;
+    for(int i = 0; i < adress; i++) {
+        current = current->next; // лежит адрес нужного
+    }
+    current->prev->next = current->next;
+    current->next->prev = current->prev;
+    lst->size--;
+    free(current);
+
+    return OK;
 }
