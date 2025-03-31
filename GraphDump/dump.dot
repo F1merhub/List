@@ -2,13 +2,22 @@ digraph G {
 	rankdir = LR;
 	bgcolor="#E6D5B8";
 	node000 [shape=Mrecord; style=filled; color="#8A9A5B"; fontcolor="#2E382E"; label=" { ip: 000 } | { value:   1 } | { next:   1 } | { prev:  -1 } "];
-	node001 [shape=Mrecord; style=filled; color="#8A9A5B"; fontcolor="#2E382E"; label=" { ip: 001 } | { value:   3 } | { next:  -1 } | { prev:   0 } "];
+	node001 [shape=Mrecord; style=filled; color="#8A9A5B"; fontcolor="#2E382E"; label=" { ip: 001 } | { value:   2 } | { next:   2 } | { prev:   0 } "];
+	node002 [shape=Mrecord; style=filled; color="#8A9A5B"; fontcolor="#2E382E"; label=" { ip: 002 } | { value:   4 } | { next:   3 } | { prev:   1 } "];
+	node003 [shape=Mrecord; style=filled; color="#8A9A5B"; fontcolor="#2E382E"; label=" { ip: 003 } | { value:   5 } | { next:   4 } | { prev:   2 } "];
+	node004 [shape=Mrecord; style=filled; color="#8A9A5B"; fontcolor="#2E382E"; label=" { ip: 004 } | { value:   6 } | { next:  -1 } | { prev:   3 } "];
 
 	node000 -> node001 [style=bold; weight=1000; color="#E1A95F"];
+	node001 -> node002 [style=bold; weight=1000; color="#E1A95F"];
+	node002 -> node003 [style=bold; weight=1000; color="#E1A95F"];
+	node003 -> node004 [style=bold; weight=1000; color="#E1A95F"];
+	node004 -> node003 [weight=0; color="#A67B5B"; constraint=false];
+	node003 -> node002 [weight=0; color="#A67B5B"; constraint=false];
+	node002 -> node001 [weight=0; color="#A67B5B"; constraint=false];
 	node001 -> node000 [weight=0; color="#A67B5B"; constraint=false];
 
 	head [shape=Mrecord; style=filled; color="#4A7023"; fontcolor="white"; label="Head"];
 	head -> node000 [style=dashed; color="#4A7023"];
 	tail [shape=hexagon; style=filled; color="#4A7023"; fontcolor="white"; label="Tail"];
-	tail -> node001 [style=dashed; color="#4A7023"; constraint=false];
+	tail -> node004 [style=dashed; color="#4A7023"; constraint=false];
 }

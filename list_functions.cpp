@@ -23,19 +23,21 @@ void List_Destructor(List **lst) {
     }
 }
 
-error_code List_Add(List *lst, list_element value, int adress) {
-
-    if (! lst)
+error_code List_Verify(List *lst, int adress) {
+    if (lst == NULL)
         return NULL_LST;
 
-    if (adress > lst->size)
+    if (adress < 0 || adress > lst->size)
         return INVALID_ADRESS;
 
-    if (! adress)
-        return List_Add_First(lst, value);
+    return OK;
+}
 
-    if (adress == lst->size)
-        return List_Add_Last(lst, value);
+error_code List_Add(List *lst, list_element value, int adress) {
+
+    error_code status = List_Verify(lst, adress); // туть + list_add_last/first
+    if (status != OK)
+        return status;
 
     Node *new_node = (Node *)calloc(1, sizeof(Node));
     if (new_node == NULL)
@@ -43,94 +45,54 @@ error_code List_Add(List *lst, list_element value, int adress) {
 
     new_node->value = value;
 
+        if (lst->head == NULL) { // пустой список
+                lst->head = new_node;
+                lst->tail = new_node;
+            }
+
+        else if (adress == 0) { // начало
+                new_node->next = lst->head;
+                lst->head->prev = new_node;
+                lst->head = new_node;
+        }
+
+        else if (adress == lst->size) { // конец
+                lst->tail->next = new_node;
+                new_node->prev = lst->tail;
+                lst->tail = new_node;
+        }
+
+        else {   // добавление внутрь
+            Node *current = lst->head;
+            for (int i = 0; i < adress - 1; i++)
+                current = current->next;
+
+            new_node->next = current->next;
+            new_node->prev = current;
+            current->next->prev = new_node;
+            current->next = new_node;
+        }
+
+    lst->size++;
+    return OK;
+}
+
+error_code List_Remove_Pointer(List *lst, Node *ptr) {
+    if (lst == NULL || ptr == NULL) {
+        return INVALID_POINTER;
+    }
+
+    int index = 0;
     Node *current = lst->head;
-    for (int i = 0; i < adress - 1; i++)
+    while (current != NULL && current != ptr) {
         current = current->next;
-
-    new_node->next = current->next;
-    new_node->prev = current;
-    current->next->prev = new_node;
-    current->next = new_node;
-
-    lst->size++;
-    return OK;
-}
-
-error_code List_Add_First(List *lst, list_element value) {
-
-    if (! lst)
-        return NULL_LST;
-
-    Node *new_node = (Node *)calloc(1, sizeof(Node));
-    if (! new_node)
-        return MEMORY_ALLOCATION_ERROR;
-
-    new_node->value = value;
-    new_node->prev = NULL;
-    new_node->next = NULL;
-
-    if (! lst->head) {
-        new_node->next = NULL;
-        lst->head = new_node;
-        lst->tail = new_node;
-    }
-    else
-    {
-        new_node->next = lst->head;
-        lst->head->prev = new_node;
-        lst->head = new_node;
+        index++;
     }
 
-    lst->size++;
-    return OK;
-}
+    if (current == NULL)
+        return POINTER_NOT_FOUND;
 
-error_code List_Add_Last(List *lst, list_element value) {
-    if (! lst)
-        return NULL_LST;
-
-    Node *new_node = (Node*)calloc(1, sizeof(Node));
-    if (! new_node)
-        return MEMORY_ALLOCATION_ERROR;
-
-    new_node->value = value;
-    new_node->next = NULL;
-    new_node->prev = NULL;
-
-    if (! lst->tail)
-    {
-        new_node->prev = NULL;
-        lst->tail = new_node;
-        lst->head = new_node;
-    }
-    else
-    {
-        new_node->prev = lst->tail;
-        lst->tail->next = new_node;
-        lst->tail = new_node;
-    }
-
-    lst->size++;
-    return OK;
-}
-
-error_code List_Remove_Pointer(List *lst, Node *remove_node) {
-    if (! lst || (!remove_node))
-        return NULL_LST;
-
-    if (remove_node->prev)
-        remove_node->prev->next = remove_node->next;
-    else if (remove_node == lst->head)
-        lst->head = remove_node->next;
-
-    if (remove_node->next)
-        remove_node->next->prev = remove_node->prev;
-    else if (remove_node == lst->tail)
-        lst->tail = remove_node->prev;
-
-    free(remove_node);
-    lst->size--;
-    return OK;
+    return List_Remove_Index(lst, index);
 }
 
 error_code List_Print(List *lst) {
@@ -187,12 +149,8 @@ Node* List_Find(List *lst, list_element value) {  // первое вхожден
     return NULL;
 }
 
-error_code List_Remove_Index(List *lst, int adress) {
-    if (! lst)
-        return NULL_LST;
-
-    if (adress > lst->size)
-        return INVALID_ADRESS;
+error_code List_Remove_Index(List *lst, int adress) { // FIXME call List_Remove_Pointer
+    List_Verify(lst, adress);
 
     Node *current = lst->head;
     for(int i = 0; i < adress; i++) {

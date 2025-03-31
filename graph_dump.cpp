@@ -1,7 +1,7 @@
 #include "list.h"
 
 int List_Dump_Dot(List *lst) {
-    char buffer[BUFFER_SIZE];
+    char buffer[BUFFER_SIZE] = {};
     int buffer_len = 0;
 
     buffer_len += snprintf(buffer + buffer_len, BUFFER_SIZE - buffer_len,

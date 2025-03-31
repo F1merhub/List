@@ -7,7 +7,6 @@
 
 typedef int list_element;
 const size_t BUFFER_SIZE = 4048;
-#define ELEMENT_SPECIFICATOR "%d";
 
 typedef struct Node
 {
@@ -28,7 +27,9 @@ enum error_code
     OK = 0,
     NULL_LST = 1,
     MEMORY_ALLOCATION_ERROR = 2,
-    INVALID_ADRESS = 3
+    INVALID_ADRESS = 3,
+    INVALID_POINTER = 4,
+    POINTER_NOT_FOUND = 5
 };
 
 error_code List_Remove_Pointer(List *lst, Node *remove_node);
@@ -46,5 +47,6 @@ error_code List_Print(List *lst);
 int List_Dump_Dot(List *lst);
 error_code List_Remove_Adress(List *lst, int adress);
 error_code List_Remove_Index(List *lst, int adress);
+error_code List_Verify(List *lst, int adress);
 
 #endif
