@@ -11,10 +11,10 @@ digraph G {
 	node001 -> node002 [style=bold; weight=1000; color="#E1A95F"];
 	node002 -> node003 [style=bold; weight=1000; color="#E1A95F"];
 	node003 -> node004 [style=bold; weight=1000; color="#E1A95F"];
+	node005 -> node004 [weight=0; color="#A67B5B"; constraint=false];
 	node004 -> node003 [weight=0; color="#A67B5B"; constraint=false];
 	node003 -> node002 [weight=0; color="#A67B5B"; constraint=false];
 	node002 -> node001 [weight=0; color="#A67B5B"; constraint=false];
-	node001 -> node000 [weight=0; color="#A67B5B"; constraint=false];
 
 	head [shape=Mrecord; style=filled; color="#4A7023"; fontcolor="white"; label="Head"];
 	head -> node000 [style=dashed; color="#4A7023"];

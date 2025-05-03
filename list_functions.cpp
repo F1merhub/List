@@ -1,7 +1,11 @@
 #include "list.h"
 
-List *List_Constructor() {
+List *List_Constructor(error_code *err) {
     List *lst = (List *)calloc(1, sizeof(List));
+    if (lst == NULL) {
+        *err = NULL_LST;
+        return NULL;
+    }
 
     lst->head = NULL;
     lst->tail = NULL;
@@ -10,7 +14,8 @@ List *List_Constructor() {
     return lst;
 }
 
-void List_Destructor(List **lst) {
+error_code List_Destructor(List **lst) {
+    LIST_NULL_CHECK(lst);
     if (lst && *lst) {
         Node *current = (*lst)->head;
         while (current) {
@@ -21,27 +26,24 @@ void List_Destructor(List **lst) {
         free(*lst);
         *lst = NULL;
     }
+    return OK;
 }
 
 error_code List_Verify(List *lst, int adress) {
-    if (lst == NULL)
-        return NULL_LST;
-
+    LIST_NULL_CHECK(lst);
     if (adress < 0 || adress > lst->size)
         return INVALID_ADRESS;
-
     return OK;
 }
 
 error_code List_Add(List *lst, list_element value, int adress) {
 
-    error_code status = List_Verify(lst, adress); // туть + list_add_last/first
+    error_code status = List_Verify(lst, adress);
     if (status != OK)
         return status;
 
     Node *new_node = (Node *)calloc(1, sizeof(Node));
-    if (new_node == NULL)
-        return MEMORY_ALLOCATION_ERROR;
+    LIST_NULL_CHECK(lst);
 
     new_node->value = value;
 
@@ -82,17 +84,12 @@ error_code List_Remove_Pointer(List *lst, Node *ptr) {
         return INVALID_POINTER;
     }
 
-    int index = 0;
-    Node *current = lst->head;
-    while (current != NULL && current != ptr) {
-        current = current->next;
-        index++;
-    }
+    ptr->prev->next = ptr->next;
+    ptr->next->prev = ptr->prev;
 
-    if (current == NULL)
-        return POINTER_NOT_FOUND;
+    free(ptr);
 
-    return List_Remove_Index(lst, index);
+    return OK;
 }
 
 error_code List_Print(List *lst) {
@@ -134,10 +131,11 @@ Node* List_Get_Prev(Node* current) {
 }
 
 
-Node* List_Find(List *lst, list_element value) {  // первое вхождение
-    if (! lst)
+Node* List_Find(List *lst, list_element value, error_code* err) {  // первое вхождение
+    if (lst == NULL) {
+        *err = NULL_LST;
         return NULL;
-
+    }
     Node *current = lst->head;
     while (current)
     {
@@ -154,12 +152,10 @@ error_code List_Remove_Index(List *lst, int adress) { // FIXME call List_Remove_
 
     Node *current = lst->head;
     for(int i = 0; i < adress; i++) {
-        current = current->next; // лежит адрес нужного
+        current = current->next; 
     }
-    current->prev->next = current->next;
-    current->next->prev = current->prev;
-    lst->size--;
-    free(current);
+    List_Remove_Pointer(lst, current);
 
     return OK;
 }
+
